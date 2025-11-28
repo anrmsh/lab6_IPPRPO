@@ -26,7 +26,6 @@ class AppTest {
         assertEquals("a", App.reverse("a"));
         assertEquals("racecar", App.reverse("racecar"));
         assertNull(App.reverse(null));
-
     }
 
     @ParameterizedTest
