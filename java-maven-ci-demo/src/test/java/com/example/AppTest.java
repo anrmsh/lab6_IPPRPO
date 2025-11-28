@@ -18,4 +18,13 @@ class AppTest {
     void testGreet() {
         assertEquals("Hello, World!", App.greet("World"));
     }
+
+    @Test
+    void testReverse() {
+        assertEquals("cba", App.reverse("abc"));
+        assertEquals("", App.reverse(""));
+        assertEquals("a", App.reverse("a"));
+        assertEquals("racecar", App.reverse("racecar"));
+        assertNull(App.reverse(null));
+    }
 }

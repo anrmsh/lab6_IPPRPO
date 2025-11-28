@@ -24,4 +24,11 @@ public class App {
     // Здесь могла бы быть любая логика — валидация, обработка и т.п.
     return "Hello, " + name + "!";
   }
+
+  public static String reverse(String str) {
+    if (str == null) {
+      return null;
+    }
+    return new StringBuilder(str).reverse().toString();
+  }
 }
