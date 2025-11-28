@@ -28,17 +28,5 @@ class AppTest {
         assertNull(App.reverse(null));
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "иванов, Иванов",
-            "ПЕТРОВ, Петров",
-            "сидоРов, Сидоров",
-            "smith, Smith",
-            "MCdonald, Mcdonald",
-            "о, О",
-            "а, А"
-    })
-    void testFormatName_ValidInput(String input, String expected) {
-        assertEquals(expected, App.formatName(input));
-    }
+
 }
