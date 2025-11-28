@@ -27,4 +27,9 @@ class AppTest {
         assertEquals("racecar", App.reverse("racecar"));
         assertNull(App.reverse(null));
     }
+
+    @Test
+    void testFormatName_ValidInput(String input, String expected) {
+        assertEquals(expected, App.formatName(input));
+    }
 }
