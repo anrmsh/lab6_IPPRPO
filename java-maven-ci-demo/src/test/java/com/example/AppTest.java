@@ -29,7 +29,7 @@ class AppTest {
     }
 
     @Test
-    void testFormatName_ValidInput(String input, String expected) {
+    void testFormatNameValidInput(String input, String expected) {
         assertEquals(expected, App.formatName(input));
     }
 }
