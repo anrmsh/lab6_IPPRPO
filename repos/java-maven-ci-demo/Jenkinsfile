@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+    }
+
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+
+    environment {
+        MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
+        REPO_URL = 'https://github.com/AleksandraRyma/lab6_attempt2.git'
+        DEFAULT_BRANCH = 'master'
+        PROJECT_DIR = 'java-maven-ci-demo'  // Добавлена переменная для папки проекта
+    }
+
+    triggers {
+        pollSCM('H/1 * * * *')  // Проверка каждую минуту
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: "${env.BRANCH_NAME ?: env.DEFAULT_BRANCH}",
+                    url: "${env.REPO_URL}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -v'
+                    bat 'mvn -B -U clean compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -B test'
+                }
+            }
+            post {
+                always {
+                    dir(env.PROJECT_DIR) {  // Переход в папку проекта для отчетов
+                        junit '**/target/surefire-reports/*.xml'
+
+                    }
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -B package'
+                }
+      cd      }
+            post {
+                success {
+                    dir(env.PROJECT_DIR) {  // Переход в папку проекта для артефактов
+                        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    }
+                }
+            }
+        }
+
+        stage('Quality gates') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'master'
+                }
+            }
+            steps {
+                echo 'Quality checks placeholder'
+            }
+        }
+
+        stage('Deploy (local)') {
+            when {
+                branch 'master'
+            }
+            steps {
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'java -jar target/java-maven-ci-demo-1.0.0.jar > app.log 2>&1'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Build successful for ${env.BRANCH_NAME ?: env.DEFAULT_BRANCH}"
+        }
+        failure {
+            echo "Build failed for ${env.BRANCH_NAME ?: env.DEFAULT_BRANCH}"
+        }
+        always {
+            cleanWs()
+        }
+    }
+}
