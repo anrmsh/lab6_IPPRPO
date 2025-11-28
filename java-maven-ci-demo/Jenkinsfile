@@ -60,7 +60,7 @@ pipeline {
                 dir(env.PROJECT_DIR) {  // Переход в папку проекта
                     bat 'mvn -B package'
                 }
-      cd      }
+           }
             post {
                 success {
                     dir(env.PROJECT_DIR) {  // Переход в папку проекта для артефактов
