@@ -31,4 +31,21 @@ public class App {
     }
     return new StringBuilder(str).reverse().toString();
   }
+
+  public static String formatName(String name) {
+    if (name == null || name.trim().isEmpty()) {
+      return name;
+    }
+
+    String trimmedName = name.trim();
+
+    // Если строка состоит из одного символа
+    if (trimmedName.length() == 1) {
+      return trimmedName.toUpperCase();
+    }
+
+    // Первая буква - заглавная, остальные - строчные
+    return trimmedName.substring(0, 1).toUpperCase() +
+            trimmedName.substring(1).toLowerCase();
+  }
 }
